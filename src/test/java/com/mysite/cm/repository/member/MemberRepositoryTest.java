@@ -9,11 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -33,7 +29,7 @@ class MemberRepositoryTest {
         clear();
 
         // then
-        Member foundMember = memberRepository.findById(member.getId()).orElseThrow(MemberNotFoundException::new);
+        Member foundMember = memberRepository.findById(member.getId()).orElseThrow();
         assertThat(foundMember.getId()).isEqualTo(member.getId());
     }
 
@@ -47,7 +43,7 @@ class MemberRepositoryTest {
         clear();
 
         // then
-        Member foundMember = memberRepository.findById(member.getId()).orElseThrow(MemberNotFoundException::new);
+        Member foundMember = memberRepository.findById(member.getId()).orElseThrow();
         assertThat(foundMember.getCreatedAt()).isNotNull();
         assertThat(foundMember.getModifiedAt()).isNotNull();
         assertThat(foundMember.getCreatedAt()).isEqualTo(foundMember.getModifiedAt());
@@ -61,12 +57,12 @@ class MemberRepositoryTest {
         clear();
 
         // when
-        Member foundMember = memberRepository.findById(member.getId()).orElseThrow(MemberNotFoundException::new);
+        Member foundMember = memberRepository.findById(member.getId()).orElseThrow();
         foundMember.updateNickname(updatedNickname);
         clear();
 
         // then
-        Member updatedMember = memberRepository.findById(member.getId()).orElseThrow(MemberNotFoundException::new);
+        Member updatedMember = memberRepository.findById(member.getId()).orElseThrow();
         assertThat(updatedMember.getNickname()).isEqualTo(updatedNickname);
     }
 
@@ -81,7 +77,7 @@ class MemberRepositoryTest {
         clear();
 
         // then
-        assertThatThrownBy(() -> memberRepository.findById(member.getId()).orElseThrow(MemberNotFoundException::new))
+        assertThatThrownBy(() -> memberRepository.findById(member.getId()).orElseThrow())
                 .isInstanceOf(MemberNotFoundException.class);
     }
 
@@ -92,7 +88,7 @@ class MemberRepositoryTest {
         clear();
 
         // when
-        Member foundMember = memberRepository.findByEmail(member.getEmail()).orElseThrow(MemberNotFoundException::new);
+        Member foundMember = memberRepository.findByEmail(member.getEmail()).orElseThrow();
 
         // then
         assertThat(foundMember.getEmail()).isEqualTo(member.getEmail());
@@ -105,7 +101,7 @@ class MemberRepositoryTest {
         clear();
 
         // when
-        Member foundMember = memberRepository.findByNickname(member.getNickname()).orElseThrow(MemberNotFoundException::new);
+        Member foundMember = memberRepository.findByNickname(member.getNickname()).orElseThrow();
 
         // then
         assertThat(foundMember.getNickname()).isEqualTo(member.getNickname());
