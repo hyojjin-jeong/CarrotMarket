@@ -15,29 +15,26 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Configuration
+	public class SpringSecurityConfig {
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().disable()
-                .authorizeHttpRequests(request -> request
-                        .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                        .requestMatchers("/status", "/images/**", "/view/join", "/auth/join").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(login -> login
-                        .loginPage("/view/login")
-                        .loginProcessingUrl("/login-process")
-                        .usernameParameter("userid")
-                        .passwordParameter("pw")
-                        .defaultSuccessUrl("/view/dashboard", true)
-                        .permitAll()
-                )
-                .logout(withDefaults());
+	    @Bean
+	    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	        http.csrf().disable().cors().disable()
+	                .authorizeHttpRequests(request -> request
+	                        .requestMatchers("/CarrotMarket").permitAll()
+	                        .anyRequest().authenticated()
+	                )
+	                .formLogin(login -> login
+	                        .loginPage("/CarrotMarket/login")	
+	                        .usernameParameter("email")	
+	                        .passwordParameter("password")	
+	                        .defaultSuccessUrl("/CarrotMarket", true)
+	                        .permitAll()
+	                )
+	                .logout(withDefaults());
 
-        return http.build();
-    }
+	        return http.build();
+	    }
+	}
 }

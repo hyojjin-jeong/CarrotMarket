@@ -5,12 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class MainController {
-
-	@GetMapping("/CarrotMarket")
+@RequestMapping("/CarrotMarket")
+public class MemberController {
+	@GetMapping("/login")
     public String index() {
-        return "main";
+        return "login";
 	}
-    
-    
 }
