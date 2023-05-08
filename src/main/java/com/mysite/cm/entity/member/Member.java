@@ -4,12 +4,10 @@ import com.mysite.cm.entity.common.EntityDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.Builder;
 
 import jakarta.persistence.*;
-import java.util.List;
-import java.util.Set;
-
-import static java.util.stream.Collectors.toSet;
 
 @Entity
 @Getter
@@ -31,6 +29,7 @@ public class Member extends EntityDate {
     @Column(nullable = false, unique = true, length = 20) 
     private String nickname;
     
+    @Builder
     public Member(String email, String password, String username, String nickname) {
         this.email = email;
         this.password = password;
@@ -40,6 +39,10 @@ public class Member extends EntityDate {
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+    
+    public static Member createMember(String email, String pw, PasswordEncoder passwordEncoder) {
+        return new Member(email, passwordEncoder.encode(pw), "USERNAME","NICKNAME");
     }
 
 }
