@@ -4,10 +4,12 @@ import com.mysite.cm.entity.common.EntityDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import lombok.Builder;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.stream.Collectors.toSet;
 
 @Entity
 @Getter
@@ -18,31 +20,38 @@ public class Member extends EntityDate {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false, length = 30, unique = true) 
+    @Column(nullable = false, length = 30, unique = true)
     private String email;
 
-    private String password; 
+    private String password;
 
     @Column(nullable = false, length = 20)
     private String username;
 
-    @Column(nullable = false, unique = true, length = 20) 
+    @Column(nullable = false, unique = true, length = 20)
     private String nickname;
     
-    @Builder
-    public Member(String email, String password, String username, String nickname) {
+    @Column(nullable = false, unique = true, length = 20)
+    private String phone;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MemberRole> roles;
+
+    public Member(String email, String password, String username, String nickname, String phone, List<Role> roles) {
         this.email = email;
         this.password = password;
         this.username = username;
         this.nickname = nickname;
+        this.phone = phone;
+        this.roles = roles.stream().map(r -> new MemberRole(this, r)).collect(toSet());
     }
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
     
-    public static Member createMember(String email, String pw, PasswordEncoder passwordEncoder) {
-        return new Member(email, passwordEncoder.encode(pw), "USERNAME","NICKNAME");
+    public void updatePhone(String phone) {
+    	this.phone = phone;
     }
 
 }
